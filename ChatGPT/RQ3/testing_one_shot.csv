@@ -1,0 +1,276 @@
+prompts
+"Generate commit messages based on code diffs. Provide concise and descriptive commit messages that accurately reflect the changes made in the code. Use appropriate language and conventions commonly used in commit messages. Your responses should only include commit messages, without any explanations or translations. Generate commit messages for the following code diffs. Here is the code diff: diff --git a/TagService_old.java b/TagService_new.java
+index 1992eb2..afd05df 100644
+--- a/TagService_old.java
++++ b/TagService_new.java
+@@ -31,6 +31,7 @@ public interface TagService extends CrudService<Tag, Integer> {
+      * @param name name
+      * @return Tag
+      */
++    @Nullable
+     Tag getByName(@NonNull String name);
+ 
+     /**
+diff --git a/CategoryServiceImpl_old.java b/CategoryServiceImpl_new.java
+index 0d8b850..fff4aa1 100644
+--- a/CategoryServiceImpl_old.java
++++ b/CategoryServiceImpl_new.java
+@@ -16,6 +16,7 @@ import run.halo.app.repository.CategoryRepository;
+ import run.halo.app.service.CategoryService;
+ import run.halo.app.service.PostCategoryService;
+ import run.halo.app.service.base.AbstractCrudService;
++import run.halo.app.utils.ServiceUtils;
+ 
+ import java.util.Collections;
+ import java.util.LinkedList;
+@@ -56,7 +57,7 @@ public class CategoryServiceImpl extends AbstractCrudService<Category, Integer>
+         }
+ 
+         // Check parent id
+-        if (category.getParentId() > 0) {
++        if (!ServiceUtils.isEmptyId(category.getParentId())) {
+             count = categoryRepository.countById(category.getParentId());
+ 
+             if (count == 0) {
+ This is the generated message: Fix NPE when importing markdown files Here is the code diff: diff --git a/OrchestrationMasterSlaveDataSource_old.java b/OrchestrationMasterSlaveDataSource_new.java
+index 7582b69..e0e6b22 100644
+--- a/OrchestrationMasterSlaveDataSource_old.java
++++ b/OrchestrationMasterSlaveDataSource_new.java
+@@ -25,6 +25,7 @@ import io.shardingsphere.api.config.MasterSlaveRuleConfiguration;
+ import io.shardingsphere.core.constant.properties.ShardingProperties;
+ import io.shardingsphere.core.rule.MasterSlaveRule;
+ import io.shardingsphere.orchestration.config.OrchestrationConfiguration;
++import io.shardingsphere.orchestration.config.OrchestrationType;
+ import io.shardingsphere.orchestration.internal.OrchestrationFacade;
+ import io.shardingsphere.orchestration.internal.config.ConfigurationService;
+ import io.shardingsphere.orchestration.internal.event.config.MasterSlaveConfigurationEventBusEvent;
+@@ -58,7 +59,7 @@ public class OrchestrationMasterSlaveDataSource extends AbstractOrchestrationDat
+         Preconditions.checkState(null != masterSlaveRuleConfig && !Strings.isNullOrEmpty(masterSlaveRuleConfig.getMasterDataSourceName()), ""No available master slave rule configuration to load."");
+         dataSource = new MasterSlaveDataSource(configService.loadDataSourceMap(), new OrchestrationMasterSlaveRule(masterSlaveRuleConfig), configService.loadMasterSlaveConfigMap(),
+                 new ShardingProperties(configService.loadMasterSlaveProperties()));
+-        initOrchestrationFacade(dataSource);
++        getOrchestrationFacade().init(OrchestrationType.MASTER_SLAVE);
+     }
+     
+     private void initOrchestrationFacade(final MasterSlaveDataSource masterSlaveDataSource) {
+ This is the generated message:"
+"Generate commit messages for code diffs based on the changes made. Here is the code diff: diff --git a/TagService_old.java b/TagService_new.java
+index 1992eb2..afd05df 100644
+--- a/TagService_old.java
++++ b/TagService_new.java
+@@ -31,6 +31,7 @@ public interface TagService extends CrudService<Tag, Integer> {
+      * @param name name
+      * @return Tag
+      */
++    @Nullable
+     Tag getByName(@NonNull String name);
+ 
+     /**
+diff --git a/CategoryServiceImpl_old.java b/CategoryServiceImpl_new.java
+index 0d8b850..fff4aa1 100644
+--- a/CategoryServiceImpl_old.java
++++ b/CategoryServiceImpl_new.java
+@@ -16,6 +16,7 @@ import run.halo.app.repository.CategoryRepository;
+ import run.halo.app.service.CategoryService;
+ import run.halo.app.service.PostCategoryService;
+ import run.halo.app.service.base.AbstractCrudService;
++import run.halo.app.utils.ServiceUtils;
+ 
+ import java.util.Collections;
+ import java.util.LinkedList;
+@@ -56,7 +57,7 @@ public class CategoryServiceImpl extends AbstractCrudService<Category, Integer>
+         }
+ 
+         // Check parent id
+-        if (category.getParentId() > 0) {
++        if (!ServiceUtils.isEmptyId(category.getParentId())) {
+             count = categoryRepository.countById(category.getParentId());
+ 
+             if (count == 0) {
+ This is the generated message: Fix NPE when importing markdown files Here is the code diff: diff --git a/OrchestrationMasterSlaveDataSource_old.java b/OrchestrationMasterSlaveDataSource_new.java
+index 7582b69..e0e6b22 100644
+--- a/OrchestrationMasterSlaveDataSource_old.java
++++ b/OrchestrationMasterSlaveDataSource_new.java
+@@ -25,6 +25,7 @@ import io.shardingsphere.api.config.MasterSlaveRuleConfiguration;
+ import io.shardingsphere.core.constant.properties.ShardingProperties;
+ import io.shardingsphere.core.rule.MasterSlaveRule;
+ import io.shardingsphere.orchestration.config.OrchestrationConfiguration;
++import io.shardingsphere.orchestration.config.OrchestrationType;
+ import io.shardingsphere.orchestration.internal.OrchestrationFacade;
+ import io.shardingsphere.orchestration.internal.config.ConfigurationService;
+ import io.shardingsphere.orchestration.internal.event.config.MasterSlaveConfigurationEventBusEvent;
+@@ -58,7 +59,7 @@ public class OrchestrationMasterSlaveDataSource extends AbstractOrchestrationDat
+         Preconditions.checkState(null != masterSlaveRuleConfig && !Strings.isNullOrEmpty(masterSlaveRuleConfig.getMasterDataSourceName()), ""No available master slave rule configuration to load."");
+         dataSource = new MasterSlaveDataSource(configService.loadDataSourceMap(), new OrchestrationMasterSlaveRule(masterSlaveRuleConfig), configService.loadMasterSlaveConfigMap(),
+                 new ShardingProperties(configService.loadMasterSlaveProperties()));
+-        initOrchestrationFacade(dataSource);
++        getOrchestrationFacade().init(OrchestrationType.MASTER_SLAVE);
+     }
+     
+     private void initOrchestrationFacade(final MasterSlaveDataSource masterSlaveDataSource) {
+ This is the generated message:"
+"You are tasked with creating a commit message for the given code diff. The message should be informative, concise, and follow the conventional commit message format. Please do not include any additional explanations or translations. Here is the code diff: diff --git a/TagService_old.java b/TagService_new.java
+index 1992eb2..afd05df 100644
+--- a/TagService_old.java
++++ b/TagService_new.java
+@@ -31,6 +31,7 @@ public interface TagService extends CrudService<Tag, Integer> {
+      * @param name name
+      * @return Tag
+      */
++    @Nullable
+     Tag getByName(@NonNull String name);
+ 
+     /**
+diff --git a/CategoryServiceImpl_old.java b/CategoryServiceImpl_new.java
+index 0d8b850..fff4aa1 100644
+--- a/CategoryServiceImpl_old.java
++++ b/CategoryServiceImpl_new.java
+@@ -16,6 +16,7 @@ import run.halo.app.repository.CategoryRepository;
+ import run.halo.app.service.CategoryService;
+ import run.halo.app.service.PostCategoryService;
+ import run.halo.app.service.base.AbstractCrudService;
++import run.halo.app.utils.ServiceUtils;
+ 
+ import java.util.Collections;
+ import java.util.LinkedList;
+@@ -56,7 +57,7 @@ public class CategoryServiceImpl extends AbstractCrudService<Category, Integer>
+         }
+ 
+         // Check parent id
+-        if (category.getParentId() > 0) {
++        if (!ServiceUtils.isEmptyId(category.getParentId())) {
+             count = categoryRepository.countById(category.getParentId());
+ 
+             if (count == 0) {
+ This is the generated message: Fix NPE when importing markdown files Here is the code diff: diff --git a/OrchestrationMasterSlaveDataSource_old.java b/OrchestrationMasterSlaveDataSource_new.java
+index 7582b69..e0e6b22 100644
+--- a/OrchestrationMasterSlaveDataSource_old.java
++++ b/OrchestrationMasterSlaveDataSource_new.java
+@@ -25,6 +25,7 @@ import io.shardingsphere.api.config.MasterSlaveRuleConfiguration;
+ import io.shardingsphere.core.constant.properties.ShardingProperties;
+ import io.shardingsphere.core.rule.MasterSlaveRule;
+ import io.shardingsphere.orchestration.config.OrchestrationConfiguration;
++import io.shardingsphere.orchestration.config.OrchestrationType;
+ import io.shardingsphere.orchestration.internal.OrchestrationFacade;
+ import io.shardingsphere.orchestration.internal.config.ConfigurationService;
+ import io.shardingsphere.orchestration.internal.event.config.MasterSlaveConfigurationEventBusEvent;
+@@ -58,7 +59,7 @@ public class OrchestrationMasterSlaveDataSource extends AbstractOrchestrationDat
+         Preconditions.checkState(null != masterSlaveRuleConfig && !Strings.isNullOrEmpty(masterSlaveRuleConfig.getMasterDataSourceName()), ""No available master slave rule configuration to load."");
+         dataSource = new MasterSlaveDataSource(configService.loadDataSourceMap(), new OrchestrationMasterSlaveRule(masterSlaveRuleConfig), configService.loadMasterSlaveConfigMap(),
+                 new ShardingProperties(configService.loadMasterSlaveProperties()));
+-        initOrchestrationFacade(dataSource);
++        getOrchestrationFacade().init(OrchestrationType.MASTER_SLAVE);
+     }
+     
+     private void initOrchestrationFacade(final MasterSlaveDataSource masterSlaveDataSource) {
+ This is the generated message:"
+"Generate a commit message for the given code diff that accurately reflects the changes made. The message should be clear, concise, and follow the standard conventions used in commit messages. Here is the code diff: diff --git a/TagService_old.java b/TagService_new.java
+index 1992eb2..afd05df 100644
+--- a/TagService_old.java
++++ b/TagService_new.java
+@@ -31,6 +31,7 @@ public interface TagService extends CrudService<Tag, Integer> {
+      * @param name name
+      * @return Tag
+      */
++    @Nullable
+     Tag getByName(@NonNull String name);
+ 
+     /**
+diff --git a/CategoryServiceImpl_old.java b/CategoryServiceImpl_new.java
+index 0d8b850..fff4aa1 100644
+--- a/CategoryServiceImpl_old.java
++++ b/CategoryServiceImpl_new.java
+@@ -16,6 +16,7 @@ import run.halo.app.repository.CategoryRepository;
+ import run.halo.app.service.CategoryService;
+ import run.halo.app.service.PostCategoryService;
+ import run.halo.app.service.base.AbstractCrudService;
++import run.halo.app.utils.ServiceUtils;
+ 
+ import java.util.Collections;
+ import java.util.LinkedList;
+@@ -56,7 +57,7 @@ public class CategoryServiceImpl extends AbstractCrudService<Category, Integer>
+         }
+ 
+         // Check parent id
+-        if (category.getParentId() > 0) {
++        if (!ServiceUtils.isEmptyId(category.getParentId())) {
+             count = categoryRepository.countById(category.getParentId());
+ 
+             if (count == 0) {
+ This is the generated message: Fix NPE when importing markdown files Here is the code diff: diff --git a/OrchestrationMasterSlaveDataSource_old.java b/OrchestrationMasterSlaveDataSource_new.java
+index 7582b69..e0e6b22 100644
+--- a/OrchestrationMasterSlaveDataSource_old.java
++++ b/OrchestrationMasterSlaveDataSource_new.java
+@@ -25,6 +25,7 @@ import io.shardingsphere.api.config.MasterSlaveRuleConfiguration;
+ import io.shardingsphere.core.constant.properties.ShardingProperties;
+ import io.shardingsphere.core.rule.MasterSlaveRule;
+ import io.shardingsphere.orchestration.config.OrchestrationConfiguration;
++import io.shardingsphere.orchestration.config.OrchestrationType;
+ import io.shardingsphere.orchestration.internal.OrchestrationFacade;
+ import io.shardingsphere.orchestration.internal.config.ConfigurationService;
+ import io.shardingsphere.orchestration.internal.event.config.MasterSlaveConfigurationEventBusEvent;
+@@ -58,7 +59,7 @@ public class OrchestrationMasterSlaveDataSource extends AbstractOrchestrationDat
+         Preconditions.checkState(null != masterSlaveRuleConfig && !Strings.isNullOrEmpty(masterSlaveRuleConfig.getMasterDataSourceName()), ""No available master slave rule configuration to load."");
+         dataSource = new MasterSlaveDataSource(configService.loadDataSourceMap(), new OrchestrationMasterSlaveRule(masterSlaveRuleConfig), configService.loadMasterSlaveConfigMap(),
+                 new ShardingProperties(configService.loadMasterSlaveProperties()));
+-        initOrchestrationFacade(dataSource);
++        getOrchestrationFacade().init(OrchestrationType.MASTER_SLAVE);
+     }
+     
+     private void initOrchestrationFacade(final MasterSlaveDataSource masterSlaveDataSource) {
+ This is the generated message:"
+"You are acting as a commit message generator. Your task is to create an appropriate commit message for the given code diff. The commit message should be clear, informative, and brief. Please refrain from adding any explanations or additional words. Here is the code diff: diff --git a/TagService_old.java b/TagService_new.java
+index 1992eb2..afd05df 100644
+--- a/TagService_old.java
++++ b/TagService_new.java
+@@ -31,6 +31,7 @@ public interface TagService extends CrudService<Tag, Integer> {
+      * @param name name
+      * @return Tag
+      */
++    @Nullable
+     Tag getByName(@NonNull String name);
+ 
+     /**
+diff --git a/CategoryServiceImpl_old.java b/CategoryServiceImpl_new.java
+index 0d8b850..fff4aa1 100644
+--- a/CategoryServiceImpl_old.java
++++ b/CategoryServiceImpl_new.java
+@@ -16,6 +16,7 @@ import run.halo.app.repository.CategoryRepository;
+ import run.halo.app.service.CategoryService;
+ import run.halo.app.service.PostCategoryService;
+ import run.halo.app.service.base.AbstractCrudService;
++import run.halo.app.utils.ServiceUtils;
+ 
+ import java.util.Collections;
+ import java.util.LinkedList;
+@@ -56,7 +57,7 @@ public class CategoryServiceImpl extends AbstractCrudService<Category, Integer>
+         }
+ 
+         // Check parent id
+-        if (category.getParentId() > 0) {
++        if (!ServiceUtils.isEmptyId(category.getParentId())) {
+             count = categoryRepository.countById(category.getParentId());
+ 
+             if (count == 0) {
+ This is the generated message: Fix NPE when importing markdown files Here is the code diff: diff --git a/OrchestrationMasterSlaveDataSource_old.java b/OrchestrationMasterSlaveDataSource_new.java
+index 7582b69..e0e6b22 100644
+--- a/OrchestrationMasterSlaveDataSource_old.java
++++ b/OrchestrationMasterSlaveDataSource_new.java
+@@ -25,6 +25,7 @@ import io.shardingsphere.api.config.MasterSlaveRuleConfiguration;
+ import io.shardingsphere.core.constant.properties.ShardingProperties;
+ import io.shardingsphere.core.rule.MasterSlaveRule;
+ import io.shardingsphere.orchestration.config.OrchestrationConfiguration;
++import io.shardingsphere.orchestration.config.OrchestrationType;
+ import io.shardingsphere.orchestration.internal.OrchestrationFacade;
+ import io.shardingsphere.orchestration.internal.config.ConfigurationService;
+ import io.shardingsphere.orchestration.internal.event.config.MasterSlaveConfigurationEventBusEvent;
+@@ -58,7 +59,7 @@ public class OrchestrationMasterSlaveDataSource extends AbstractOrchestrationDat
+         Preconditions.checkState(null != masterSlaveRuleConfig && !Strings.isNullOrEmpty(masterSlaveRuleConfig.getMasterDataSourceName()), ""No available master slave rule configuration to load."");
+         dataSource = new MasterSlaveDataSource(configService.loadDataSourceMap(), new OrchestrationMasterSlaveRule(masterSlaveRuleConfig), configService.loadMasterSlaveConfigMap(),
+                 new ShardingProperties(configService.loadMasterSlaveProperties()));
+-        initOrchestrationFacade(dataSource);
++        getOrchestrationFacade().init(OrchestrationType.MASTER_SLAVE);
+     }
+     
+     private void initOrchestrationFacade(final MasterSlaveDataSource masterSlaveDataSource) {
+ This is the generated message:"
