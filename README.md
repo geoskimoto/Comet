@@ -10,9 +10,8 @@
   - [Quality Assurance](#quality-assurance) 
   - [Evaluation](#evaluation)
 - [ChatGPT Comparison](#chatgpt-comparison)
-- [Contributing](#contributing)
 
-## Overview
+## Overview <a id="overview"></a>
 
 COMET utilizes a novel graph-based representation called delta graphs to capture code changes and context. It leverages transformer models fine-tuned on delta graphs to generate commit messages. COMET also contains a quality assurance module to rank generated messages.
 
@@ -22,7 +21,7 @@ Key highlights:
 - Transformer-based generation module
 - Customizable quality assurance ranking
 
-## Setup
+## Setup <a id="setup"></a>
 
 ### Requirements
 
@@ -34,9 +33,9 @@ Key highlights:
 - NumPy
 - Pandas
 
-## Usage
+## Usage <a id="usage"></a>
 
-### Data Pre-processing
+### Data Pre-processing <a id="data-preprocessing"></a>
 In order to obtain the Delta graph representation of code changes. Follow these steps: 
 1. Make sure the data is in json format with the following arrangement
   - A key:"commit_message" and value: corresponding message in string format.
@@ -50,7 +49,7 @@ Run the following script:
 python pre-process/main.py
 ```
 
-## Models
+## Models <a id="model-training"></a>
 Please use the following links to download the models concerned with Comet's generation and Quality Assurance modules.
 
 ```
@@ -84,7 +83,7 @@ To fine-tune:
 python Generation/model.py 
 ```
 
-## Quality Assurance Module
+## Quality Assurance Module <a id="quality-assurance"></a>
 
 The quality assurance module code is located in `QualityAssurance` folder. The messages final embeddings are generated and are then ranked acccording to preference. The code for ranking based on trained examples is given in the folder Quality Assurance/Rank. It contains:
 
@@ -99,7 +98,7 @@ To use quality assurance:
 2. At inference, pass delta graph and candidate messages
 3. Module will rank messages based on training
 
-### Evaluation
+### Evaluation <a id="evaluation"></a>
 
 Evaluation code for BLEU, METEOR, ROUGE is located in `Generation` folder.
 
@@ -109,7 +108,7 @@ To evaluate a checkpoint:
 python Generation/bleu/app.py --checkpoint {CHECKPOINT_PATH}
 ```
 
-## ChatGPT Comparison
+## ChatGPT Comparison <a id="chatgpt-comparison"></a>
 
 The `ChatGPT` folder contains code related to comparing COMET against GPT-3.5 and GPT-4 under various settings.
 
