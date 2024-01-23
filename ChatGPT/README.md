@@ -35,7 +35,7 @@ To use:
 python hit_api.py
 ```
 
-This will generate commit messages for all prompts and code diffs in `data.csv`.
+This will generate commit messages for all prompts and code diffs in `data.csv`(e.g. `single_prompt_output.csv`).
 
 All the required files/data are part of the respective folders (gpt-3.5 and gpt-4).
 
