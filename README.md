@@ -1,5 +1,5 @@
 # COMET 
-## COMET (Context-aware Commit Message Generation) is a technique for automatically generating high-quality commit messages by capturing the context of code changes.
+Generating Commit Messages using Delta Graph Context Representation
 
 ## Contents
 - [Overview](#overview)
