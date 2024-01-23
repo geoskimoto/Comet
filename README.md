@@ -1,6 +1,40 @@
 # COMET 
-## A Context-Aware Approach to Commit Message Generation
+## COMET (Context-aware Commit Message Generation) is a technique for automatically generating high-quality commit messages by capturing the context of code changes.
 
+## Contents
+- [Overview](#overview)
+- [Setup](#setup)
+- [Usage](#usage)
+  - [Data Preprocessing](#data-preprocessing)
+  - [Model Training](#model-training)
+  - [Quality Assurance](#quality-assurance) 
+  - [Evaluation](#evaluation)
+- [ChatGPT Comparison](#chatgpt-comparison)
+- [Contributing](#contributing)
+
+## Overview
+
+COMET utilizes a novel graph-based representation called delta graphs to capture code changes and context. It leverages transformer models fine-tuned on delta graphs to generate commit messages. COMET also contains a quality assurance module to rank generated messages.
+
+Key highlights:
+
+- Delta graph representation to capture code context 
+- Transformer-based generation module
+- Customizable quality assurance ranking
+
+## Setup
+
+### Requirements
+
+- Python 3.6+
+- PyTorch 1.3+
+- Transformers 4.0+
+- Joern
+- NLTK
+- NumPy
+- Pandas
+
+## Usage
 
 ### Data Pre-processing
 In order to obtain the Delta graph representation of code changes. Follow these steps: 
@@ -20,7 +54,7 @@ python pre-process/main.py
 Please use the following links to download the models concerned with Comet's generation and Quality Assurance modules.
 
 ```
-https://doi.org/10.5281/zenodo.7901752
+use https://doi.org/10.5281/zenodo.7901752 to download:
 ```
     .
     ├── ChatGPT                   # Code and survery information of RQ3
@@ -29,7 +63,7 @@ https://doi.org/10.5281/zenodo.7901752
     ├── pre-process               # raw code to Delta graph conversion script
 
 ```
-https://doi.org/10.5281/zenodo.7902315
+use https://doi.org/10.5281/zenodo.7902315 to download:
 ```
     .
     ├── Delta graph              # Delta graph representations 
@@ -38,23 +72,74 @@ https://doi.org/10.5281/zenodo.7902315
 
 ## Generation Module
 
-This folder contains the code realting to finetuning the Code-T5 model on Delta graph data.
+This folder contains the code relating to finetuning the Code-T5 model on Delta graph data.
 Hyperparameters : 
   Learning rate: 5e-5
   Optimizer: AdamW
 
-To fine tune: 
+To fine-tune: 
 1. Download the data from the Zenodo link provided above. Place the data in the ./Generation folder.
-2. Execute the command below to fine tune Code-T5 on Delta graph data
+2. Execute the command below to fine-tune Code-T5 on Delta graph data
 ```
 python Generation/model.py 
 ```
 
 ## Quality Assurance Module
 
-The Quality Assurance folder contains the code for the QA Module as described in the paper. 
-The messages final embeddings are generated and are then ranked acccording to preference. The code for ranking based on trained examples is given in the folder Quality Assurance/Rank.
+The quality assurance module code is located in `QualityAssurance` folder. The messages final embeddings are generated and are then ranked acccording to preference. The code for ranking based on trained examples is given in the folder Quality Assurance/Rank. It contains:
 
-## ChatGPT
+- `GCN.py`: Graph convolution network 
+- `Rank`: Code for ranking generated messages
+- `nlpparser.py`: Parses text to dependency tree
+- `text_preprocess.py`: Text preprocessing
 
-This folder contains the code related to Research question: 3
+To use quality assurance:
+
+1. Train QA model on labeled delta graph - message pairs
+2. At inference, pass delta graph and candidate messages
+3. Module will rank messages based on training
+
+### Evaluation
+
+Evaluation code for BLEU, METEOR, ROUGE is located in `Generation` folder.
+
+To evaluate a checkpoint:
+
+```bash
+python Generation/bleu/app.py --checkpoint {CHECKPOINT_PATH}
+```
+
+## ChatGPT Comparison
+
+The `ChatGPT` folder contains code related to comparing COMET against GPT-3.5 and GPT-4 under various settings.
+
+It includes:
+
+- Prompt engineering data
+- GPT API requests
+- Output formatting and analysis
+
+See `ChatGPT/README.md` for details.
+
+## Data Format
+
+The data must be in the following JSON format:
+
+```json
+{
+  "commit_message": "Commit message text",
+  
+  "classes": [
+    {
+      "class_name": "Class1",
+      "prev_code": "Previous code", 
+      "new_code": "Updated code"
+    },
+    {
+      "class_name": "Class2",
+      "prev_code": "Previous code",
+      "new_code": "Updated code" 
+    }
+  ]
+}
+```
