@@ -7,7 +7,6 @@ This folder contains code and data related to comparing COMET against GPT models
 ## Contents
 - [Prompts](#prompts)
 - [Usage](#usage)
-- [Results](#results)
 
 ## Prompts <a id="prompts"></a>
 
