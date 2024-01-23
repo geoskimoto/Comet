@@ -100,13 +100,8 @@ To use quality assurance:
 
 ### Evaluation <a id="evaluation"></a>
 
-Evaluation code for BLEU, METEOR, ROUGE is located in `Generation` folder.
-
-To evaluate a checkpoint:
-
-```bash
-python Generation/bleu/app.py --checkpoint {CHECKPOINT_PATH}
-```
+The evaluation code for BLEU, METEOR, and ROUGE is located in the `Generation` folder.
+For detailed instructions please check the readme for [BLEU](https://github.com/SMART-Dal/Comet/tree/main/Generation/bleu), [METEOR](https://github.com/SMART-Dal/Comet/tree/main/Generation/meteor), [ROUGE](https://github.com/SMART-Dal/Comet/tree/main/Generation/rouge)
 
 ## ChatGPT Comparison <a id="chatgpt-comparison"></a>
 
