@@ -22,8 +22,6 @@ The following section contains the prompts used for GPT-3.5 and GPT-4 APIs to ge
 
 - "You are acting as a commit message generator. Your task is to create an appropriate commit message for the given code diff. The commit message should be clear, informative, and brief. Please refrain from adding any explanations or additional words."
 
-- Generate a commit message for the given code diff that accurately reflects the changes made. The message should be clear, concise, and follow the standard conventions used in commit messages.
-
 
 ## Usage <a id="usage"></a>
 
