@@ -11,6 +11,8 @@ import subprocess
 import os 
 import shutil 
 import pydot 
+import time 
+import pathlib
 
 class CodePreProcess:
     
@@ -78,59 +80,60 @@ class CodePreProcess:
         return write_path
                 
     
-    def process(self,file_path, name):
+
+
+    def process(self, file_path, name):
+        print("Processing: " + name)
         
-        print("Processing :" + name)
-                
-        class_list = sorted(glob(file_path+"/*"))
+        class_list = sorted(glob(file_path + "/*"))
         counter = 0
         
+        def delete_folder(folder):
+            """Deletes a folder if it exists."""
+            if os.path.exists(folder):
+                shutil.rmtree(folder)  # Use rmtree for directories with contents
+
+        # Clean up the 'singleDot' and 'dots' folders before processing
+        delete_folder('singleDot')
+        os.makedirs('singleDot', exist_ok=True)
+
+        delete_folder('dots')
         
-        os.makedirs("singleDot",exist_ok=True)
-                
         for index in range(len(class_list)):
+            print(f'Starting joern-parse for {class_list[index]}...')
+            parse_command = ["joern-parse", class_list[index]]
+            subprocess.run(parse_command, check=True)
+            print('joern-parse finished')
 
-            parse_command1 = ["joern-parse", class_list[index]]
-            subprocess.run(parse_command1, check=True)
+            print(f'Starting joern-export for {class_list[index]}...')
+            export_command = ["joern-export", "--out", "dots", "--repr", "cpg", "--format", "dot"]
+            subprocess.run(export_command, check=True)
+            print('joern-export finished')
             
-            export_command1 = ["joern-export","--out","dots","--repr","cpg","--format","dot"]
-            subprocess.run(export_command1, check=True)
+            dot_file_path = sorted(glob("dots/" + class_list[index] + "/*"))
             
-            dot_file_path = sorted(glob("dots/"+class_list[index]+"/*"))
-            
-                                    
-            for path_index in range(1,len(dot_file_path)):
-                
-#               os.rename(dot_file_path[path_index], dot_file_path[path_index]+str(counter))
-                
-                                
+            # Rename and move files to 'singleDot' folder
+            for path_index in range(1, len(dot_file_path)):
                 base_name, extension = os.path.splitext(dot_file_path[path_index])
-                
-                new_name = base_name +"ren"+str(counter) + extension
-                                
+                new_name = f"{base_name}_ren{counter}{extension}"
                 os.rename(dot_file_path[path_index], new_name)
-                
                 shutil.move(new_name, "singleDot")
-               
-                counter +=1
+                counter += 1
+            
+            # Clean up 'dots' folder after processing the current class
+            delete_folder('dots')
+            
+        # Combine the files in 'singleDot' after processing all classes
+        if len(class_list) > 0:
+            path = self.combine_dots("singleDot", name)
+            return path
 
-            # Not working
-            shutil.rmtree("dots")
-            
-            if index == len(class_list)-1:
                 
-                path = self.combine_dots("singleDot", name)
                 
-                counter = 0
-                return path
                 
-
-            
-            
-            
-                        
-            
-            
-        
+                            
+                
                 
             
+                    
+                

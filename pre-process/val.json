@@ -1,0 +1,52 @@
+[
+  {
+    "commit_message": "Refactored User class to improve readability",
+    "classes": [
+      {
+        "class_name": "User",
+        "prev_code": "class User:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age",
+        "new_code": "class User:\n    def __init__(self, name: str, age: int):\n        self.name = name\n        self.age = age"
+      }
+    ]
+  },
+  {
+    "commit_message": "Fixed bug in calculate_total method of Order class",
+    "classes": [
+      {
+        "class_name": "Order",
+        "prev_code": "class Order:\n    def calculate_total(self, items):\n        total = sum(item.price for item in items)\n        return total + 5",
+        "new_code": "class Order:\n    def calculate_total(self, items):\n        total = sum(item.price for item in items)\n        return total + self.tax"
+      }
+    ]
+  },
+  {
+    "commit_message": "Optimized search method in Database class",
+    "classes": [
+      {
+        "class_name": "Database",
+        "prev_code": "class Database:\n    def search(self, query):\n        results = []\n        for record in self.records:\n            if query in record:\n                results.append(record)\n        return results",
+        "new_code": "class Database:\n    def search(self, query):\n        return [record for record in self.records if query in record]"
+      }
+    ]
+  },
+  {
+    "commit_message": "Updated Logger to use log levels",
+    "classes": [
+      {
+        "class_name": "Logger",
+        "prev_code": "class Logger:\n    def log(self, message):\n        print(message)",
+        "new_code": "class Logger:\n    def log(self, message, level='INFO'):\n        print(f'[{level}] {message}')"
+      }
+    ]
+  },
+  {
+    "commit_message": "Added error handling to APIClient",
+    "classes": [
+      {
+        "class_name": "APIClient",
+        "prev_code": "class APIClient:\n    def fetch_data(self, url):\n        return requests.get(url).json()",
+        "new_code": "class APIClient:\n    def fetch_data(self, url):\n        try:\n            response = requests.get(url)\n            response.raise_for_status()\n            return response.json()\n        except requests.exceptions.RequestException as e:\n            print(f'Error fetching data: {e}')\n            return None"
+      }
+    ]
+  }
+]

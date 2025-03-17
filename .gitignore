@@ -1,3 +1,15 @@
+pre-process/old/
+pre-process/new/
+pre-process/dots/
+pre-process/singleDot/
+pre-process/data.csv
+pre-process/json_files/
+pre-process/workspace/
+pre-process/cpg.bin
+
+Model_ne/
+json_files/
+
 Ranking/code_embeddings
 Ranking/Gen_Embed
 Ranking/new_final_data
