@@ -33,7 +33,7 @@ delta = []
 message = []
 print(f'length of json: {len(json_file)}')
 for index in range(len(json_file)):
-    print(f'index in range(len(json_file)): {index}')
+    print(f'index: {index}')
     try:
         for i,c in enumerate(json_file[index]['classes']):
             print('Ensuring proper permissions...')
@@ -61,7 +61,8 @@ for index in range(len(json_file)):
         try:
             sliced_graph = cpg.get_dot("old", "new")
             print(f'sliced_graph ran to completion for {index}')
-        except:
+        except Exception as e:
+            print(e)
             print('broke at running sliced_graph in main.py')
             break
         # print('sliced_graph ran to completion.')
