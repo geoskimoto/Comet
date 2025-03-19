@@ -13,7 +13,7 @@ import shutil
 import pydot 
 import time 
 import pathlib
-
+from utils import ensure_file_permissions, delete_folder
 class CodePreProcess:
     
     def __init__(self):
@@ -86,15 +86,10 @@ class CodePreProcess:
 
 
     def process(self, file_path, name):
-        print("Processing: " + name)
-        
+                
         class_list = sorted(glob(file_path + "/*"))
         counter = 0
         
-        def delete_folder(folder):
-            """Deletes a folder if it exists."""
-            if os.path.exists(folder):
-                shutil.rmtree(folder)  # Use rmtree for directories with contents
 
         # Clean up the 'singleDot' and 'dots' folders before processing
         # delete_folder('singleDot')
@@ -104,18 +99,64 @@ class CodePreProcess:
         
         for index in range(len(class_list)):
             print(f'Starting joern-parse for {class_list[index]}...')
-            parse_command = ["joern-parse", class_list[index]]
+            
+            
+            # Usage: joern-parse [options] [input]
+
+            #   input                  source file or directory containing source files
+            #   -o, --output <value>   output filename
+            #   --language <value>     source language
+            #   --list-languages       list available language options
+            #   --namespaces <value>   namespaces to include: comma separated string
+            # Overlay application stage
+            #   --nooverlays           do not apply default overlays
+            #   --overlaysonly         Only apply default overlays
+            #   --max-num-def <value>  Maximum number of definitions in per-method data flow calculation
+            # Misc
+            #   --help                 display this help message
+            # Args specified after the --frontend-args separator will be passed to the front-end verbatim
+
+
+            print(f'class to be parsed: {class_list[index]}')
+            parse_command = [
+                "joern-parse", 
+                class_list[index],
+                ]
             subprocess.run(parse_command, check=True)
             print('joern-parse finished')
-            #have to delete dots before joern-export is ran as it expects it to be empty.
+            #have to delete dots from previous iteration or else joern-export will throw a fit.
+            print('Deleting the dots/ directory from previous iteration.')
             delete_folder('dots')
-            print(f'Starting joern-export for {class_list[index]}...')
-            export_command = ["joern-export", "--out", "dots", "--repr", "cpg", "--format", "dot"]
+            delete_folder('out') #this folder is being created for some reason by joern-export and also crashes 
+
+            # print('Recreating dots/ directory.')  # doesn't work...even an empty dots folder will make joern-export fail.
+            # os.makedirs('dots', exist_ok=True)
+            print(f'Starting joern-export.  This should grab the cpg.bin in pre-process/ and export it as a .dot file to /dots.')
+
+            
+            
+            # Usage: joern-export [options] [cpg]
+            #   --help
+            #   cpg                input CPG file name - defaults to `cpg.bin`
+            #   -o, --out <value>  output directory - will be created and must not yet exist
+            #   --repr <value>     representation to extract: [all|ast|cdg|cfg|cpg|cpg14|ddg|pdg] - defaults to `Cpg14`
+            #   --format <value>   export format, one of [dot|graphml|graphson|neo4jcsv] - defaults to `Dot`
+            print(f'Current working directory {os.getcwd()}')
+            
+            ensure_file_permissions("/home/mrguy/Projects/comet/Comet/pre-process/cpg.bin")
+            
+            export_command = [
+                "joern-export",
+                "/home/mrguy/Projects/comet/Comet/pre-process/cpg.bin",  # Positional argument (not --cpg)                "--out", "/home/mrguy/Projects/comet/Comet/pre-process/dots",
+                "--repr", "cpg",
+                "--format", "dot"
+            ]            
             subprocess.run(export_command, check=True)
             print('joern-export finished')
             
 
             dot_file_path = sorted(glob("dots/" + class_list[index] + "/*"))
+            print(f'dot_file_path: {dot_file_path}.')
             if not dot_file_path:  # If the list is empty
                 print("Warning: No .dot files were created for", class_list[index])
                 continue  # Skip processing this class

@@ -5,9 +5,9 @@ import joern_cpg
 import json 
 import os
 import shutil
-import pandas as pd
-import getpass
-    
+# import pandas as pd
+# import getpass
+from utils import ensure_folder_permissions as ensure_permissions   
 junk_data_list = []
 junk_counter = 0
 print('initializing joern_cpg in main.py')
@@ -20,13 +20,6 @@ print('loading json')
 json_file = json.load(open(file))
 print('json_file (val.json) uploaded in main.py.')
 
-def ensure_permissions(folder):
-    if os.path.exists(folder):
-        # Change ownership to the current user
-        os.system(f"sudo chown -R {getpass.getuser()}:{getpass.getuser()} {folder}")
-        # Ensure write permissions
-        os.chmod(folder, 0o777)
-        print('Permissions changed to 777.')
 
 # DataFrame
 delta = []
@@ -108,6 +101,7 @@ for index in range(len(json_file)):
     df = pd.DataFrame()
     df["delta"] = delta
     df["message"] = message
+    print(df)
 
 
     df.to_csv("data.csv", index=False)    
