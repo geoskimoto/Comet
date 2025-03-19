@@ -13,7 +13,7 @@ import shutil
 import pydot 
 import time 
 import pathlib
-from utils import ensure_file_permissions, delete_folder
+from utils import ensure_file_permissions, ensure_folder_permissions, delete_folder
 class CodePreProcess:
     
     def __init__(self):
@@ -94,7 +94,7 @@ class CodePreProcess:
         # Clean up the 'singleDot' and 'dots' folders before processing
         # delete_folder('singleDot')
         os.makedirs('singleDot', exist_ok=True)
-
+        ensure_folder_permissions('singleDot')
         # delete_folder('dots')
         
         for index in range(len(class_list)):
