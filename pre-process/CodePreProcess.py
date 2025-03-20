@@ -121,6 +121,8 @@ class CodePreProcess:
             parse_command = [
                 "joern-parse", 
                 class_list[index],
+                # "--language",
+                # "python"
                 ]
             subprocess.run(parse_command, check=True)
             print('joern-parse finished')
@@ -145,23 +147,50 @@ class CodePreProcess:
             
             ensure_file_permissions("/home/mrguy/Projects/comet/Comet/pre-process/cpg.bin")
             
+            cpg_path = "/home/mrguy/Projects/comet/Comet/pre-process/cpg.bin"
+            output_dir = "/home/mrguy/Projects/comet/Comet/pre-process/dots"
+
+            # Make sure the output directory does not already exist
+            if os.path.exists(output_dir):
+                print(f"Error: Output directory {output_dir} already exists. Joern requires a non-existent directory.")
+                exit(1)
+
+            #this worked in the command line!  joern-export cpg.bin --out "dots"
+            # Need to replicate that here:
+            print(f'cwd: {os.getcwd()}')
             export_command = [
                 "joern-export",
-                "/home/mrguy/Projects/comet/Comet/pre-process/cpg.bin",  # Positional argument (not --cpg)                "--out", "/home/mrguy/Projects/comet/Comet/pre-process/dots",
-                "--repr", "cpg",
-                "--format", "dot"
-            ]            
-            subprocess.run(export_command, check=True)
+                "cpg.bin",
+                "--out", "dots"
+            ]
+            # export_command = [
+            #     "joern-export",
+            #     "cpg.bin"
+            #     "--out", output_dir   
+            #     # "--repr", "cpg",
+            #     # "--format", "dot",
+            #     # cpg_path               # CPG file should be last
+            # ]
+
+            try:
+                subprocess.run(export_command, check=True)
+            except subprocess.CalledProcessError as e:
+                print(f"Error running Joern: {e}")
+            
             print('joern-export finished')
             
+            dot_files = sorted(glob("dots/*.dot"))
 
-            dot_file_path = sorted(glob("dots/" + class_list[index] + "/*"))
+            # dot_file_path = sorted(glob(output_dir + "/" + class_list[index] + "/*"))
+            dot_file_path = dot_files
             print(f'dot_file_path: {dot_file_path}.')
             if not dot_file_path:  # If the list is empty
-                print("Warning: No .dot files were created for", class_list[index])
+                print("Warning: dot_file_path is not correct, or no .dot files were created for", class_list[index])
+                print(dot_file_path)
                 continue  # Skip processing this class
             else:
                 print(f'dot_file_path: {dot_file_path}')
+                print(dot_file_path)
             
             # Rename and move files to 'singleDot' folder
             for path_index in range(1, len(dot_file_path)):

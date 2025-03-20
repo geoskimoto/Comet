@@ -32,7 +32,7 @@ class CodeT5:
     
     def __init__(self):
         
-        self.tokenizer = RobertaTokenizer.from_pretrained("codet5-large")
+        self.tokenizer = RobertaTokenizer.from_pretrained("codet5-large")  #replace with lcocal path to T5 model after downloading
         self.model = T5ForConditionalGeneration.from_pretrained("codet5-large")
         
         self.model.train()

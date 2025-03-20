@@ -7,6 +7,8 @@ pre-process/json_files/
 pre-process/workspace/
 pre-process/cpg.bin
 
+train_sep.csv
+
 Model_ne/
 json_files/
 

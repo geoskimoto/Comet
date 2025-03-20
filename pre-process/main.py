@@ -25,7 +25,7 @@ print('json_file (val.json) uploaded in main.py.')
 delta = []
 message = []
 print(f'length of json: {len(json_file)}')
-for index in range(len(json_file)):
+for index in range(len(json_file))[1:]:
     print(f'index: {index}')
     try:
         for i,c in enumerate(json_file[index]['classes']):
@@ -38,6 +38,7 @@ for index in range(len(json_file)):
             print('making directory new')
             os.makedirs("new",exist_ok=True)        
             print('opening and writing to old/')
+            
             with open("old/"+c['class_name'].split("/")[0]+"dot"+str(i)+".java","w") as f:
                 f.write(c['prev_code'])
             
