@@ -28,7 +28,7 @@ class Preprocess_graph:
     """ ELIMINATING DUPLICATE NODES """
     def eliminate_duplicate(self,dot,save_output=False):
         
-        print("ELIMINATING DUPLICATES")
+        print("ELIMINATING DUPLICATES (I'm in pre_process.py)")
               
         dot = pydot.graph_from_dot_file(dot)[0]
         
@@ -41,7 +41,7 @@ class Preprocess_graph:
         final_replace = []
         final_retain = []
         indexes_to_remove = []
-        
+        # print()
         for i in range(len(code_snippets)):
           counter = 0
           current = code_snippets[i][1]
@@ -56,7 +56,7 @@ class Preprocess_graph:
               final_retain.append(current)
         
         nodes_to_pop = [x for i,x in enumerate(njson['nodes']) if i in indexes_to_remove]
-
+        print('A')
         for n in nodes_to_pop:
           njson['nodes'].remove(n)
         
@@ -69,7 +69,7 @@ class Preprocess_graph:
               if i['target'] == pairs[1]:
                   i['target'] = pairs[0]
         
-        
+        print("B")
         l = []
 
         for i in njson["links"]:
@@ -94,7 +94,7 @@ class Preprocess_graph:
         pydot_graph = pydot.Dot(graph_type='digraph')
         
         garbage_nodes = []
-        
+        print("C")
         for node in njson['nodes']:
             try:
                 name = node.get("CODE")
@@ -102,7 +102,7 @@ class Preprocess_graph:
             except:
                 garbage_nodes.append([node.get("id"),node.get("CODE")])
 
-            
+        print("D")
         for edge in njson['links']:
         
             nodes_src = dot.get_node(edge['source'])[0]
@@ -110,11 +110,11 @@ class Preprocess_graph:
             new_src = nodes_src.get_attributes().get("CODE")
             new_dest =  nodes_dest.get_attributes().get("CODE")
             pydot_graph.add_edge(pydot.Edge(new_src, new_dest, label=edge['label']))
-                            
+        print("E")            
         if save_output: 
             # 4. Save Pydot graph object to DOT file
             pydot_graph.write_raw('final.dot')    
-        
+        print(f'pydot_graph type: {type(pydot_graph)}')
         return pydot_graph
 
 

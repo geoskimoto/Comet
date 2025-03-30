@@ -27,21 +27,21 @@ class Slice:
     def slice(self):
         
         graph = self.dot_to_json(self.graph)
-
+        print(f'graph type {type(graph)}')
         # Gathering the edited nodes (Added, deleted)
         edited_nodes = []
         for nodes in graph['objects']:
             if nodes.get('TYPE') == "DEL" or nodes.get('TYPE') == "ADD": 
                 edited_nodes.append(nodes.get('_gvid'))
                 
-        
+        print('slicing.py A')
         #Gathering all the edges related to the edited nodes (1 hop)
         new_edges = []
         
         for edges in graph['edges']:
             if edges.get('tail') in edited_nodes or edges.get('head') in edited_nodes:
                 new_edges.append(edges)
-        
+        print('slicing.py A')
         # Gathering the nodes related to the new edges
         related_nodes = []
 
@@ -50,7 +50,7 @@ class Slice:
           related_nodes.append(edge.get("head"))
         
         related_nodes = set(related_nodes)
-        
+        print('slicing.py B')
         # Storing the new nodes 
         new_nodes = []
     
@@ -58,7 +58,7 @@ class Slice:
           if nodes.get('_gvid') in related_nodes:
               new_nodes.append(nodes)
               
-        
+        print('slicing.py C')
         # Constructing a graph for new edges and nodes
         new_graph = graph
         new_graph['objects'] = new_nodes
@@ -66,15 +66,15 @@ class Slice:
         
         # 2. Create Pydot graph object
         pydot_graph = pydot.Dot(graph_type='graph')
-        
+        print('slicing.py D')
         # 3. Traverse JSON object and add nodes and edges
         for node in new_graph['objects']:
             pydot_graph.add_node(pydot.Node(node.get('_gvid'), label=node.get('label'), CODE=node.get('CODE'), TYPE=node.get('TYPE')))
-          
+        print('slicing.py E')  
         for edge in new_graph['edges']:
             new_src = [x.get('_gvid') for x in graph['objects'] if x.get('_gvid')==edge.get('tail')][0]
             new_dest = [x.get('_gvid') for x in graph['objects'] if x.get('_gvid')==edge.get('head')][0]
             pydot_graph.add_edge(pydot.Edge(new_src, new_dest, label=edge['label']))
-            
+        print('slicing.py F')    
         return pydot_graph        
                             

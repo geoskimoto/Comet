@@ -51,25 +51,31 @@ class CodePreProcess:
       return pydot_graph
   
     def combine_dots(self, folder_name, return_name):
-        print('combining dots...')
-        print(f'folder_name: {folder_name}')
-        print(f'return_name: {return_name}')
+        print('combining dots... (Im in CodePreProcess.py)')
+        # print(f'folder_name: {folder_name}')
+        # print(f'return_name: {return_name}')
         dots = sorted(glob(folder_name+"/*"))
-        print(f'dots: {dots}')
+        # print(f'dots: {dots}')
         jsons = []
         
         for d in dots:
             try:
-                print(f'd: {d}')
+                # print(f'd: {d}')
                 dgs = pydot.graph_from_dot_file(d)[0]
                 jsons.append(self.dot_to_json(dgs))
-            except:
+            except Exception as e:
+                print("loop failed in .combine_dots.  I'm in CodePreProcess.py")
+                print(e)
                 pass
-        
-        combined_json = self.combine_json(jsons)
-        
-        combined_dot = self.initial_dot(combined_json)
-        
+        try:
+            combined_json = self.combine_json(jsons)
+        except Exception as e:
+            print(f"combined_json = self.combine_json(jsons) failed.  I'm in CodePreProcess.py")
+
+        try:
+            combined_dot = self.initial_dot(combined_json)
+        except Exception as e:
+            print("combined_dot = self.initial_dot(combined_json) failed.  I'm in CodePreProcess.py")
         
         shutil.rmtree(folder_name)
         
@@ -130,7 +136,7 @@ class CodePreProcess:
             print('Deleting the dots/ directory from previous iteration.')
             delete_folder('dots')
             delete_folder('out') #this folder is being created for some reason by joern-export and also crashes 
-
+            delete_folder('singleDot')
             # print('Recreating dots/ directory.')  # doesn't work...even an empty dots folder will make joern-export fail.
             # os.makedirs('dots', exist_ok=True)
             print(f'Starting joern-export.  This should grab the cpg.bin in pre-process/ and export it as a .dot file to /dots.')
@@ -178,28 +184,53 @@ class CodePreProcess:
                 print(f"Error running Joern: {e}")
             
             print('joern-export finished')
-            
-            dot_files = sorted(glob("dots/*.dot"))
 
-            # dot_file_path = sorted(glob(output_dir + "/" + class_list[index] + "/*"))
-            dot_file_path = dot_files
-            print(f'dot_file_path: {dot_file_path}.')
-            if not dot_file_path:  # If the list is empty
-                print("Warning: dot_file_path is not correct, or no .dot files were created for", class_list[index])
-                print(dot_file_path)
-                continue  # Skip processing this class
-            else:
-                print(f'dot_file_path: {dot_file_path}')
-                print(dot_file_path)
-            
+
+            dot_files = sorted(glob("dots/*.dot"))
+            # print(f'dot_files in dots/: {dot_files}')
+            print(f'Number of dot_files: {len(dot_files)}')
+
+            if not dot_files:  # If the list is empty
+                print("Warning: dot_files is not correct, or no .dot files were created.")
+                print(dot_files)
+            # else:
+                # print(f'dot_files: {dot_files}')
+                # print(f'Number of dot_files: {len(dot_files)}')
+
+            # Ensure 'singleDot' directory exists
+            os.makedirs("singleDot", exist_ok=True)
+
+            counter = 1  # Initialize counter
+
             # Rename and move files to 'singleDot' folder
-            for path_index in range(1, len(dot_file_path)):
-                print(f'path_index: {path_index}')
-                base_name, extension = os.path.splitext(dot_file_path[path_index])
+            for path_index in range(len(dot_files)):  # Process all files
+                # print(f'path_index: {path_index}')
+                base_name, extension = os.path.splitext(dot_files[path_index])
                 new_name = f"{base_name}_ren{counter}{extension}"
-                os.rename(dot_file_path[path_index], new_name)
+                os.rename(dot_files[path_index], new_name)
                 shutil.move(new_name, "singleDot")
                 counter += 1
+
+            # dot_files = sorted(glob("dots/*.dot"))
+            # print(f'dot_files in dots/ :  {dot_files})
+            # # dot_file_path = sorted(glob(output_dir + "/" + class_list[index] + "/*"))
+            # print(f'dot_files: {dot_files}.')
+            # if not dot_files:  # If the list is empty
+            #     print("Warning: dot_files is not correct, or no .dot files were created for", class_list[index])
+            #     print(dot_files)
+            #     continue  # Skip processing this class
+            # else:
+            #     print(f'dot_files: {dot_files}')
+            #     print(dot_files)
+            
+            # # Rename and move files to 'singleDot' folder
+            # for path_index in range(1, len(dot_files)):
+            #     print(f'path_index: {path_index}')
+            #     base_name, extension = os.path.splitext(dot_files[path_index])
+            #     new_name = f"{base_name}_ren{counter}{extension}"
+            #     os.rename(dot_files[path_index], new_name)
+            #     shutil.move(new_name, "singleDot")
+            #     counter += 1
             
             # Clean up 'dots' folder after processing the current class
             # print('deleting dots folder...')
@@ -210,7 +241,7 @@ class CodePreProcess:
         if len(class_list) > 0:
             print('combining dot files in singleDot')
             path = self.combine_dots("singleDot", name)
-            print(f'path: {path}')
+            print(f'self.combine_dots ran to completion. path: {path}')
             return path
 
                 

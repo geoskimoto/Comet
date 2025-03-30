@@ -37,34 +37,42 @@ class GU:
     def get_graph_union(self,path1, path2):
         
         """ PARSING CODE TO GRAPHS """
-        
+        print('initializing parser')
         parser = joern_cpg.Cpg(path1, path2)
-        
+        print('parsing using jeorn_cpg.Cpg')
         # Input paths of dot files of new and old graph
         input_path_old, input_path_new  = parser.get_dot()
         
-        
+        print('creating prev_object and new_object')
         # Objects
         prev_object = pre_processing.Preprocess_graph(input_path_old)
         new_object = pre_processing.Preprocess_graph(input_path_new)
         
     
         # eliminating duplicated nodes
-        prev_processed = prev_object.eliminate_duplicate()
-        new_processed = new_object.eliminate_duplicate()
+        try:
+          prev_processed = prev_object.eliminate_duplicate()
+          print("elim duplicates in prev_processed success")
+          new_processed = new_object.eliminate_duplicate()
+          print("elim duplicates in new_processed success.")
+        except Exception as e:
+           print(e)
+           pass
         
+        print('extracting from prev_processed and new_processed.')
         extraction =  graph_functions.Extract(prev_processed, new_processed)
         
+        print('extracting nodes')
         c_nodes, a_nodes, d_nodes = extraction.extract_nodes()
-    
+        print('extracting edges')
         c_edges, a_edges, d_edges = extraction.extract_edges()
-    
+        print('graph components')
         graph_components = graph_diff.GraphU(c_nodes, a_nodes, d_nodes, c_edges, a_edges, d_edges)
-        
+        print('determining diff in graphs')
         diff = graph_components.diff_graph()
-                        
+        print('slicing bread')
         slicer = slicing.Slice(diff)
-        
+        print('final diff')
         final_diff = slicer.slice()
         
         return final_diff
